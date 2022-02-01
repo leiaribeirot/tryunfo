@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class Input extends Component {
   render() {
-    const { testid, type, label, id } = this.props;
+    const { testid, type, label, id, value, onChange, checked } = this.props;
 
     if (type === 'area') {
       return (
@@ -14,6 +14,8 @@ export default class Input extends Component {
             type={ type }
             name={ id }
             id={ id }
+            value={ value }
+            onChange={ onChange }
           />
         </label>
       );
@@ -27,6 +29,8 @@ export default class Input extends Component {
             type={ type }
             name={ id }
             id={ id }
+            value={ value }
+            onChange={ onChange }
           >
             <option value="normal">Normal</option>
             <option value="raro">Raro</option>
@@ -43,6 +47,9 @@ export default class Input extends Component {
           type={ type }
           name={ id }
           id={ id }
+          value={ value }
+          onChange={ onChange }
+          checked={ checked }
         />
       </label>
     );
@@ -53,4 +60,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onChange: PropTypes.func.isRequired,
+  checked: PropTypes.bool.isRequired,
 };
