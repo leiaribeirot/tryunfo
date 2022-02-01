@@ -22,7 +22,7 @@ export default class Input extends Component {
     }
     if (type === 'select') {
       return (
-        <label htmlFor={ id }>
+        <label htmlFor={ label }>
           { label }
           <select
             data-testid={ testid }
