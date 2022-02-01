@@ -28,9 +28,9 @@ export default class Input extends Component {
             name={ id }
             id={ id }
           >
-            <option>normal</option>
-            <option>raro</option>
-            <option>muito raro</option>
+            <option value="normal">Normal</option>
+            <option value="raro">Raro</option>
+            <option value="muito raro">Muito Raro</option>
           </select>
         </label>
       );

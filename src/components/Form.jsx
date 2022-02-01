@@ -41,30 +41,18 @@ export default class Form extends Component {
           label="Carta"
           id="image"
         />
-        <label htmlFor="cardRarity">
-          Raridade da Carta:
-          <select
-            id="cardRarity"
-            name="cardRarity"
-            type="select"
-            data-testid="rare-input"
-          >
-            <option value="normal">Normal</option>
-            <option value="raro">Raro</option>
-            <option value="muito raro">Muito Raro</option>
-          </select>
-        </label>
-        <br />
-        <label htmlFor="isSuperTrybeTrunfo">
-          Super Trybe Trunfo
-          <input
-            id="isSuperTrybeTrunfo"
-            name="isSuperTrybeTrunfo"
-            type="checkbox"
-            data-testid="trunfo-input"
-          />
-        </label>
-        <br />
+        <Input
+          testid="rare-input"
+          type="select"
+          label="Raridade:"
+          id="rarity"
+        />
+        <Input
+          testid="trunfo-input"
+          type="checkbox"
+          label="Super Trybe Trunfo"
+          id="trunfo"
+        />
         <button
           type="submit"
           data-testid="save-button"
