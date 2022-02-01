@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Input from './Input';
 import PropTypes from 'prop-types';
+import Input from './Input';
 
 export default class Form extends Component {
   render() {
