@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import Card from './components/Card';
 
@@ -15,8 +16,10 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
+      hasTrunfo: false,
       isSaveButtonDisabled: true,
       cards: [],
+      cardId: '',
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,7 +29,7 @@ class App extends React.Component {
 
   handleInputChange({ target }) {
     this.setState({
-      [target.name]: target.checked ? target.checked : target.value,
+      [target.name]: target.type === 'checkbox' ? target.checked : target.value,
     }, this.validateButton);
   }
 
@@ -44,16 +47,24 @@ class App extends React.Component {
       cards,
     } = this.state;
 
+    if (cardTrunfo) {
+      this.setState({ hasTrunfo: true });
+    }
+
+    const newCard = {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+      cardTrunfo,
+      cardId: uuidv4(),
+    };
+
     this.setState({
-      cards: [...cards, { cardName,
-        cardDescription,
-        cardAttr1,
-        cardAttr2,
-        cardAttr3,
-        cardImage,
-        cardRare,
-        cardTrunfo,
-      }],
+      cards: [...cards, newCard],
       cardName: '',
       cardDescription: '',
       cardAttr1: '0',
@@ -62,6 +73,7 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
+      cardId: '',
       isSaveButtonDisabled: true,
     });
   }
@@ -79,7 +91,7 @@ class App extends React.Component {
       if (key.includes('cardAttr') && (+value < 0 || +value > maxAttr || +value === '')) {
         enableBtn.push(false);
       }
-      if (value === '') enableBtn.push(false);
+      if (!key.includes('cardId') && value === '') enableBtn.push(false);
     });
 
     if (enableBtn.includes(false)) {
@@ -90,16 +102,25 @@ class App extends React.Component {
   }
 
   render() {
+    const { cards } = this.state;
     return (
-      <div>
-        <h1>Tryunfo</h1>
-        <Form
-          { ...this.state }
-          onInputChange={ this.handleInputChange }
-          onSaveButtonClick={ this.handleSaveButtonClick }
-        />
-        <Card { ...this.state } />
-      </div>
+      <>
+        <section>
+          <h1>Tryunfo</h1>
+          <Form
+            { ...this.state }
+            onInputChange={ this.handleInputChange }
+            onSaveButtonClick={ this.handleSaveButtonClick }
+          />
+          <Card { ...this.state } />
+        </section>
+        <section>
+          <h1>Todas as cartas</h1>
+          {
+            cards.map((card) => <Card key={ card.cardId } { ...card } />)
+          }
+        </section>
+      </>
     );
   }
 }
