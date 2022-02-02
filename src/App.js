@@ -9,16 +9,18 @@ class App extends React.Component {
     this.state = {
       cardName: '',
       cardDescription: '',
-      cardAttr1: 0,
-      cardAttr2: 0,
-      cardAttr3: 0,
+      cardAttr1: '0',
+      cardAttr2: '0',
+      cardAttr3: '0',
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
       isSaveButtonDisabled: true,
+      cards: [],
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.validateButton = this.validateButton.bind(this);
   }
 
@@ -28,25 +30,56 @@ class App extends React.Component {
     }, this.validateButton);
   }
 
+  handleSaveButtonClick(event) {
+    event.preventDefault();
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+      cardTrunfo,
+      cards,
+    } = this.state;
+
+    this.setState({
+      cards: [...cards, { cardName,
+        cardDescription,
+        cardAttr1,
+        cardAttr2,
+        cardAttr3,
+        cardImage,
+        cardRare,
+        cardTrunfo,
+      }],
+      cardName: '',
+      cardDescription: '',
+      cardAttr1: '0',
+      cardAttr2: '0',
+      cardAttr3: '0',
+      cardImage: '',
+      cardRare: 'normal',
+      cardTrunfo: false,
+      isSaveButtonDisabled: true,
+    });
+  }
+
   validateButton() {
     const { cardAttr1, cardAttr2, cardAttr3 } = this.state;
-    const max = 90;
-    const maxTotal = 210;
+    const maxAttr = 90;
+    const maxAttrTotal = 210;
 
     const enableBtn = [];
 
-    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxTotal) {
-      enableBtn.push(false);
-    }
+    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxAttrTotal) enableBtn.push(false);
 
     Object.entries(this.state).forEach(([key, value]) => {
-      if (key.includes('cardAttr') && (+value < 0 || +value > max || +value === '')) {
+      if (key.includes('cardAttr') && (+value < 0 || +value > maxAttr || +value === '')) {
         enableBtn.push(false);
       }
-
-      if (value === '') {
-        enableBtn.push(false);
-      }
+      if (value === '') enableBtn.push(false);
     });
 
     if (enableBtn.includes(false)) {
