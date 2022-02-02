@@ -15,21 +15,56 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
+      isSaveButtonDisabled: true,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.validateButton = this.validateButton.bind(this);
   }
 
   handleInputChange({ target }) {
-    console.log(target.id);
-    this.setState({ [target.name]: target.checked ? target.checked : target.value });
+    this.setState({
+      [target.name]: target.checked ? target.checked : target.value,
+    }, this.validateButton);
+  }
+
+  validateButton() {
+    const { cardAttr1, cardAttr2, cardAttr3 } = this.state;
+    const max = 90;
+    const maxTotal = 210;
+
+    const enableBtn = [];
+
+    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxTotal) {
+      enableBtn.push(false);
+    }
+
+    Object.entries(this.state).forEach(([key, value]) => {
+      if (key.includes('cardAttr') && (+value < 0 || +value > max || +value === '')) {
+        enableBtn.push(false);
+      }
+
+      if (value === '') {
+        enableBtn.push(false);
+      }
+    });
+
+    if (enableBtn.includes(false)) {
+      this.setState({ isSaveButtonDisabled: true });
+    } else {
+      this.setState({ isSaveButtonDisabled: false });
+    }
   }
 
   render() {
     return (
       <div>
         <h1>Tryunfo</h1>
-        <Form onInputChange={ this.handleInputChange } />
+        <Form
+          { ...this.state }
+          onInputChange={ this.handleInputChange }
+          onSaveButtonClick={ this.handleSaveButtonClick }
+        />
         <Card { ...this.state } />
       </div>
     );
