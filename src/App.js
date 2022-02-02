@@ -1,4 +1,6 @@
 import React from 'react';
+// https://www.npmjs.com/package/uuid
+import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import Card from './components/Card';
 
@@ -18,11 +20,13 @@ class App extends React.Component {
       hasTrunfo: false,
       isSaveButtonDisabled: true,
       cards: [],
+      cardId: '',
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.validateButton = this.validateButton.bind(this);
+    this.removeCard = this.removeCard.bind(this);
   }
 
   handleInputChange({ target }) {
@@ -49,16 +53,20 @@ class App extends React.Component {
       this.setState({ hasTrunfo: true });
     }
 
+    const newCard = {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+      cardTrunfo,
+      cardId: uuidv4(),
+    };
+
     this.setState({
-      cards: [...cards, { cardName,
-        cardDescription,
-        cardAttr1,
-        cardAttr2,
-        cardAttr3,
-        cardImage,
-        cardRare,
-        cardTrunfo,
-      }],
+      cards: [...cards, newCard],
       cardName: '',
       cardDescription: '',
       cardAttr1: '0',
@@ -67,24 +75,25 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
+      cardId: '',
       isSaveButtonDisabled: true,
     });
   }
 
   validateButton() {
     const { cardAttr1, cardAttr2, cardAttr3 } = this.state;
-    const maxAttr = 90;
-    const maxAttrTotal = 210;
+    const max = 90;
+    const maxTotal = 210;
 
     const enableBtn = [];
 
-    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxAttrTotal) enableBtn.push(false);
+    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxTotal) enableBtn.push(false);
 
     Object.entries(this.state).forEach(([key, value]) => {
-      if (key.includes('cardAttr') && (+value < 0 || +value > maxAttr || +value === '')) {
+      if (key.includes('cardAttr') && (+value < 0 || +value > max || +value === '')) {
         enableBtn.push(false);
       }
-      if (value === '') enableBtn.push(false);
+      if (!key.includes('cardId') && value === '') enableBtn.push(false);
     });
 
     if (enableBtn.includes(false)) {
@@ -94,17 +103,43 @@ class App extends React.Component {
     }
   }
 
+  removeCard(idToRemove) {
+    const { cards } = this.state;
+    const { cardTrunfo } = cards.find(({ cardId }) => cardId === idToRemove);
+    const newCardList = cards.filter(({ cardId }) => cardId !== idToRemove);
+
+    this.setState({
+      cards: newCardList,
+      hasTrunfo: !cardTrunfo,
+    });
+  }
+
   render() {
+    const { cards } = this.state;
     return (
-      <div>
-        <h1>Tryunfo</h1>
-        <Form
-          { ...this.state }
-          onInputChange={ this.handleInputChange }
-          onSaveButtonClick={ this.handleSaveButtonClick }
-        />
-        <Card { ...this.state } />
-      </div>
+      <>
+        <section>
+          <h1>Tryunfo</h1>
+          <Form
+            { ...this.state }
+            onInputChange={ this.handleInputChange }
+            onSaveButtonClick={ this.handleSaveButtonClick }
+          />
+          <Card { ...this.state } />
+        </section>
+        <section>
+          <h1>Todas as cartas</h1>
+          {
+            cards.map((card) => (
+              <Card
+                { ...card }
+                key={ card.cardId }
+                onRemoveButtonClick={ (id) => this.removeCard(id) }
+              />
+            ))
+          }
+        </section>
+      </>
     );
   }
 }
