@@ -1,8 +1,9 @@
 import React from 'react';
-// https://www.npmjs.com/package/uuid
 import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import Card from './components/Card';
+import Filter from './components/Filter';
+import ShowCards from './components/ShowCards';
 
 class App extends React.Component {
   constructor() {
@@ -21,6 +22,9 @@ class App extends React.Component {
       isSaveButtonDisabled: true,
       cards: [],
       cardId: '',
+      filterByName: '',
+      filterByRarity: 'todas',
+      filterByTrunfo: false,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -82,18 +86,18 @@ class App extends React.Component {
 
   validateButton() {
     const { cardAttr1, cardAttr2, cardAttr3 } = this.state;
-    const max = 90;
-    const maxTotal = 210;
-
+    const maxAttr = 90;
+    const maxAttrTotal = 210;
+    const propsToValidate = ['cardName', 'cardDescription', 'cardImage'];
     const enableBtn = [];
 
-    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxTotal) enableBtn.push(false);
+    if ((+cardAttr1 + +cardAttr2 + +cardAttr3) > maxAttrTotal) enableBtn.push(false);
 
     Object.entries(this.state).forEach(([key, value]) => {
-      if (key.includes('cardAttr') && (+value < 0 || +value > max || +value === '')) {
+      if (key.includes('cardAttr') && (+value < 0 || +value > maxAttr || +value === '')) {
         enableBtn.push(false);
       }
-      if (!key.includes('cardId') && value === '') enableBtn.push(false);
+      if (propsToValidate.includes(key) && value === '') enableBtn.push(false);
     });
 
     if (enableBtn.includes(false)) {
@@ -108,14 +112,19 @@ class App extends React.Component {
     const { cardTrunfo } = cards.find(({ cardId }) => cardId === idToRemove);
     const newCardList = cards.filter(({ cardId }) => cardId !== idToRemove);
 
-    this.setState({
-      cards: newCardList,
-      hasTrunfo: !cardTrunfo,
-    });
+    if (cardTrunfo) {
+      this.setState({
+        cards: newCardList,
+        hasTrunfo: false,
+      });
+    } else {
+      this.setState({
+        cards: newCardList,
+      });
+    }
   }
 
   render() {
-    const { cards } = this.state;
     return (
       <>
         <section>
@@ -129,15 +138,13 @@ class App extends React.Component {
         </section>
         <section>
           <h1>Todas as cartas</h1>
-          {
-            cards.map((card) => (
-              <Card
-                { ...card }
-                key={ card.cardId }
-                onRemoveButtonClick={ (id) => this.removeCard(id) }
-              />
-            ))
-          }
+          <Filter onInputChange={ this.handleInputChange } />
+          <div>
+            <ShowCards
+              { ...this.state }
+              onRemoveButtonClick={ (id) => this.removeCard(id) }
+            />
+          </div>
         </section>
       </>
     );
