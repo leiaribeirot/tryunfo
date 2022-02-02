@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Input from './Input';
 
 export default class Form extends Component {
@@ -20,67 +20,67 @@ export default class Form extends Component {
     } = this.props;
     return (
       <form>
-        <input
-          data-testid="name-input"
+        <Input
+          testid="name-input"
           type="text"
-          label="Nome da Carta:"
-          id="name"
+          label="Nome"
+          id="cardName"
           value={ cardName }
           onChange={ onInputChange }
         />
-        <input
-          data-testid="description-input"
-          type="textarea"
-          label="Descrição da Carta:"
-          id="description"
+        <Input
+          testid="description-input"
+          type="area"
+          label="Descrição"
+          id="cardDescription"
           value={ cardDescription }
           onChange={ onInputChange }
         />
-        <input
-          data-testid="attr1-input"
+        <Input
+          testid="attr1-input"
           type="number"
-          label="Atributo 1:"
-          id="attr1"
+          label="Attr01"
+          id="cardAttr1"
           value={ cardAttr1 }
           onChange={ onInputChange }
         />
-        <input
-          data-testid="attr2-input"
+        <Input
+          testid="attr2-input"
           type="number"
-          label="Atributo 2:"
-          id="attr2"
+          label="Attr02"
+          id="cardAttr2"
           value={ cardAttr2 }
           onChange={ onInputChange }
         />
-        <input
-          data-testid="attr3-input"
+        <Input
+          testid="attr3-input"
           type="number"
-          label="Atributo 3:"
-          id="attr3"
+          label="Attr03"
+          id="cardAttr3"
           value={ cardAttr3 }
           onChange={ onInputChange }
         />
-        <input
-          data-testid="image-input"
+        <Input
+          testid="image-input"
           type="text"
-          label="Carta"
-          id="image"
+          label="Imagem"
+          id="cardImage"
           value={ cardImage }
           onChange={ onInputChange }
         />
         <Input
           testid="rare-input"
           type="select"
-          label="Raridade:"
-          id="rarity"
+          label="Raridade"
+          id="cardRare"
           value={ cardRare }
           onChange={ onInputChange }
         />
         <Input
           testid="trunfo-input"
           type="checkbox"
-          label="Super Trybe Trunfo"
-          id="trunfo"
+          label="Super Trunfo"
+          id="cardTrunfo"
           checked={ cardTrunfo }
           onChange={ onInputChange }
         />
@@ -96,6 +96,7 @@ export default class Form extends Component {
     );
   }
 }
+
 Form.propTypes = {
   cardName: PropTypes.string.isRequired,
   cardDescription: PropTypes.string.isRequired,
